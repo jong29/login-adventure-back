@@ -29,16 +29,13 @@ public class SecurityUtil {
 		return instance;
 	}
 
-	public PublicKey createKeyPair(String uuid) {
+	public void createKeyPair(String uuid) {
 		if(uuid == null)
-			return null;
+			return;
 		
 		if(keyMap.get(uuid) == null) {
 			KeyPair keyPair = RSA_2048.createKey();
 			keyMap.put(uuid, keyPair);
-			return keyPair.getPublic();
-		} else {
-			return keyMap.get(uuid).getPublic();
 		}
 	}
 
@@ -90,7 +87,7 @@ public class SecurityUtil {
 	}
 
 	public String getPublicKeyModulus(String uuid) {
-		RSAPublicKey pk = (RSAPublicKey) SecurityUtil.getInstnace().getPublicKey(uuid);
+		RSAPublicKey pk = (RSAPublicKey) instance.getPublicKey(uuid);
 		if(pk == null)
 			return null;
 		
@@ -98,7 +95,7 @@ public class SecurityUtil {
 	}
 
 	public String getPublicKeyExponent(String uuid) {
-		RSAPublicKey pk = (RSAPublicKey) SecurityUtil.getInstnace().getPublicKey(uuid);
+		RSAPublicKey pk = (RSAPublicKey) instance.getPublicKey(uuid);
 		if(pk == null)
 			return null;
 		return pk.getPublicExponent().toString(16);
