@@ -21,14 +21,16 @@ public enum ErrorCode {
 //
 //
 //    // 403
-    PERMISSION_ERROR(FORBIDDEN,"접근이 안되는 기능입니다.", NoPermissionException.class),
+    PERMISSION_ERROR(FORBIDDEN, 11, "접근이 안되는 기능입니다.", NoPermissionException.class),
     ;
     private final HttpStatus httpStatus;
+    private final int code;
     private final String message;
     private final Class<? extends Exception> klass;
 
-    ErrorCode(HttpStatus httpStatus, String message, Class<? extends Exception> klass) {
+    ErrorCode(HttpStatus httpStatus, int code, String message, Class<? extends Exception> klass) {
         this.httpStatus = httpStatus;
+        this.code = code;
         this.message = message;
         this.klass = klass;
     }
