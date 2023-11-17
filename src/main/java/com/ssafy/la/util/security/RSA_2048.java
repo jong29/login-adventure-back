@@ -42,7 +42,7 @@ public class RSA_2048 {
 			Key key = keyFactory.generatePrivate(privatekeySpec);
 
 			Cipher cipher = Cipher.getInstance("RSA");
-			byte[] ciphertextBytes = hexToByteArray(ciphertext);
+			byte[] ciphertextBytes = decode(ciphertext);
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] plaintextBytes = cipher.doFinal(ciphertextBytes);
 			return new String(plaintextBytes, "UTF8");
