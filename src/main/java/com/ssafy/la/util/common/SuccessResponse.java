@@ -18,7 +18,7 @@ public class SuccessResponse implements CommonResponse {
 	private final Map<String, Object> data;
 	
 	
-	public static ResponseEntity<SuccessResponse> toResponseEntity(int status, String msg, Map<String, Object> data) {
+	public static ResponseEntity<CommonResponse> toResponseEntity(int status, String msg, Map<String, Object> data) {
 		return ResponseEntity.status(status)
 				.body(SuccessResponse.builder()
 						.code(SUCCESSCODE)

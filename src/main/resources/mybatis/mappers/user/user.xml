@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.la.user.model.dao.UserMapper">
+
+
+    <select id="login" resultType="String" parameterType="com.ssafy.web.member.dto.UserDto">
+        select
+        username from user where userid = #{userid} and
+        userpassword =
+        #{userpassword}
+    </select>
+
+    <insert id="signup" parameterType="com.ssafy.web.member.dto.UserDto">
+        insert into user(userid,
+        userpassword, username,rrn)
+        values(#{userid}, #{userpassword}, #{username}, #{rrn})
+    </insert>
+
+    <select id="checkUserid" parameterType="String" resultType="String">
+        select username from user
+        where userid=#{userid}
+    </select>
+
+    <select id="getUserPassword" parameterType="String" resultType="String">
+        select userpassword from user where userid=#{userpassword}
+    </select>
+
+
+</mapper>
