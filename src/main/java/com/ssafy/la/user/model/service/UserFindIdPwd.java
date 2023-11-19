@@ -15,4 +15,6 @@ public class UserFindIdPwd {
 	@Autowired
 	UserRedisDao userRedisDao;
 
+	public Map<>
+
 }
