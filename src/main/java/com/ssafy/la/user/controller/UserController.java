@@ -22,6 +22,7 @@ import com.ssafy.la.user.model.dto.LoginRequestDto;
 import com.ssafy.la.user.model.dto.UserDeleteDto;
 import com.ssafy.la.user.model.dto.UserModifyDto;
 import com.ssafy.la.user.model.dto.UserSignupDto;
+import com.ssafy.la.user.model.service.UserCheckId;
 import com.ssafy.la.user.model.service.UserLoginLogout;
 import com.ssafy.la.user.model.service.UserService;
 import com.ssafy.la.user.model.service.UserSignupDelete;
@@ -57,8 +58,20 @@ public class UserController {
 	@Autowired
 	UserViewModify userViewModify;
 	
+	@Autowired
+	UserCheckId userCheckId;
+	
 	@Value("${spring.rsa.live}")
 	private Long rsaLive; 
+	
+	@GetMapping("/checkId")
+	public ResponseEntity<CommonResponse> checkId(@RequestBody String userId) {
+		String name = userCheckId.checkId(userId);
+		if (name != null) {
+			throw new MyException();
+		}
+		return SuccessResponse.toResponseEntity(200, "사용가능한 아이디입니다.", null);
+	}
 	
 	@GetMapping("/height")
 	public ResponseEntity<CommonResponse> height() {
