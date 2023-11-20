@@ -1,7 +1,11 @@
 package com.ssafy.la.user.controller;
 
+import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.ssafy.la.user.model.dao.UserRedisDao;
 import com.ssafy.la.user.model.dto.UserDeleteDto;
@@ -13,6 +17,7 @@ import com.ssafy.la.user.model.dto.LoginRequestDto;
 import com.ssafy.la.user.model.service.UserLoginLogout;
 import com.ssafy.la.util.common.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +42,27 @@ public class UserController {
 	
 	@Autowired
 	UserRegisterDelete userRegisterDelete;
+	
+	@Value("{spring.rsa.live}")
+	private Long rsaLive; 
+	
+	@GetMapping("/height")
+	public ResponseEntity<CommonResponse> height() {
+		String uuid = UUID.randomUUID().toString();	// uuid 생성
+		KeyPair keyPair = rsa_2048.createKey();	// key 생성
+		
+		userRedisDao.saveToRedis("rsa:" + uuid, rsa_2048.keyToString(keyPair.getPrivate()), Duration.ofMillis(rsaLive)); // redis에 user key 저장
+		
+		String modulus = rsa_2048.getPublicKeyModulus((RSAPublicKey) keyPair.getPublic(), uuid);
+		String exponent = rsa_2048.getPublicKeyExponent((RSAPublicKey) keyPair.getPublic(), uuid);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("uuid", uuid);
+		map.put("modulus", modulus);
+		map.put("exponent", exponent);
+		
+		return SuccessResponse.toResponseEntity(200, "키 발급 성공", map);
+	}
 
 	@PostMapping("/login")
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequestDto loginRequestDto) {

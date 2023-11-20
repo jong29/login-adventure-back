@@ -25,11 +25,13 @@ public class JWTProvider {
 		claims.put("userid", user.getUserid());
 		claims.put("issuedAt", now.getTime());
 		claims.put("role", user.getRole());
+		claims.put("issuer", Issuer);
 		
 		token = Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
 				.setClaims(claims)
 				.setIssuedAt(now)
+				.setIssuer(Issuer)
 				.setExpiration(new Date(now.getTime() + tokenLive))
 				.signWith(SignatureAlgorithm.HS256, salt)
 				.compact();
@@ -49,6 +51,7 @@ public class JWTProvider {
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
 				.setClaims(claims)
 				.setIssuedAt(now)
+				.setIssuer(Issuer)
 				.setExpiration(new Date(now.getTime() + tokenLive))
 				.signWith(SignatureAlgorithm.HS256, salt)
 				.compact();
@@ -58,8 +61,8 @@ public class JWTProvider {
 	
 	public boolean validateToken(String jwtToken, String salt) {
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(salt).parseClaimsJws(jwtToken);
-			return !claims.getBody().getExpiration().before(new Date());
+			Jws<Claims> claims = Jwts.parser().setSigningKey(salt).parseClaimsJws(jwtToken);	// 위 변조 확인
+			return !(claims.getBody().getExpiration().before(new Date()) && claims.getBody().getIssuer().equals(Issuer));
 		} catch (Exception e) {
 			return false;
 		}	
