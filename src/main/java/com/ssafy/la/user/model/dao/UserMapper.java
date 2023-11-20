@@ -17,4 +17,6 @@ public interface UserMapper {
 	void delete(String userid);
 	
 	void modify(UserVo userVo);
+	
+	String checkId(String userId);
 }
