@@ -1,6 +1,7 @@
 package com.ssafy.la.user.model.dao;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,4 +31,13 @@ public class UserRedisDao {
     public void deleteFromRedis(String key) {
     	redisTemplate.delete(key);
     }
+    
+    public long incrementAttempt(String key) {
+    	Long attempts = redisTemplate.opsForValue().increment("loginAttempt:"+key);
+    	if (attempts.equals(1L)) {
+            redisTemplate.expire("loginAttempt:"+key, 900L, TimeUnit.SECONDS);
+        }
+    	return attempts;
+    }
+    
 }

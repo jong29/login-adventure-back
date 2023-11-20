@@ -68,6 +68,10 @@ public class UserController {
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequestDto loginRequestDto) {
 
 		Map<String, Object> username = ull.login(loginRequestDto);
+		
+		// redis 로그인 시도 횟수 확인
+		
+
 		return SuccessResponse.toResponseEntity(200, "로그인 성공", username);
 
 	}
