@@ -43,7 +43,7 @@ public class UserController {
 	@Autowired
 	UserRegisterDelete userRegisterDelete;
 	
-	@Value("{spring.rsa.live}")
+	@Value("${spring.rsa.live}")
 	private Long rsaLive; 
 	
 	@GetMapping("/height")
