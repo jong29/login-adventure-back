@@ -53,28 +53,29 @@ public class GlobalFilter extends OncePerRequestFilter {
 					}
 					String token = userRedisDao.readFromRedis("rtk:" + userid);
 					if (token == null) {
-						throw new MyException();
+						throw new MyException(); // 로그아웃
 					}
 					if (rtk.equals(token)) {
-//						salt = securityMapper.getSalt(userid);	// salt값 가져와서 한 번 더 토큰 검증
-						if (!jwtProvider.validateToken(rtk, salt)) {
+						salt = securityMapper.readSalt(userid);	// salt값 가져와서 한 번 더 토큰 검증
+						if (!jwtProvider.validateToken(rtk, salt)) { // 토큰 변조
 							throw new MyException();
 						}
 					}
-
-				}
-				String atk = (String) request.getAttribute("atk");
-				if (atk == null) { // atk이 없는 경우
-					throw new MyException();
-				}
-				String token = userRedisDao.readFromRedis("atk:" + userid);
-				if (token == null) {
-					throw new MyException();
-				}
-				if (atk.equals(token)) {
-//					salt = securityMapper.getSalt(userid);
-					if (!jwtProvider.validateToken(atk, salt)) { // atk 만료된 상황 -> rtk 들고 오라고 응답
+					
+				} else {
+					String atk = (String) request.getAttribute("atk");
+					if (atk == null) { // atk이 없는 경우
 						throw new MyException();
+					}
+					String token = userRedisDao.readFromRedis("atk:" + userid);
+					if (token == null) {
+						throw new MyException();
+					}
+					if (atk.equals(token)) {
+//					salt = securityMapper.getSalt(userid);
+						if (!jwtProvider.validateToken(atk, salt)) { // atk 만료된 상황 -> rtk 들고 오라고 응답
+							throw new MyException();
+						}
 					}
 				}
 			}

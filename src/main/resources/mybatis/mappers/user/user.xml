@@ -20,6 +20,13 @@
     	delete from users
     	where userid = #{userid}
     </delete>
+    
+    
+    <select id="userinfo" parameterType="String" resultType="com.ssafy.la.user.model.dto.UserVo">
+        select * 
+        from users 
+        where userid = #{userid}
+    </select>
 
 
 </mapper>
