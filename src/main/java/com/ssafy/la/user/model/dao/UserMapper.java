@@ -8,7 +8,7 @@ import com.ssafy.la.user.model.dto.UserVo;
 @Mapper
 public interface UserMapper {
 
-	UserVo login(@Param("userid")String userid, @Param("userpassword") String userpassword);
+	UserVo login(@Param("userid")String userid, @Param("password") String password);
 	
 	UserVo userinfo(String userid);
 	

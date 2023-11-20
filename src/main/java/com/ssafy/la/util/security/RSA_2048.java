@@ -45,8 +45,8 @@ public class RSA_2048 {
 			PKCS8EncodedKeySpec privatekeySpec = new PKCS8EncodedKeySpec(privatekeyBytes);
 			Key key = keyFactory.generatePrivate(privatekeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA");
-			byte[] ciphertextBytes = decode(ciphertext);
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			byte[] ciphertextBytes = hexToByteArray(ciphertext);
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] plaintextBytes = cipher.doFinal(ciphertextBytes);
 			return new String(plaintextBytes, "UTF8");

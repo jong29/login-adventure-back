@@ -14,12 +14,12 @@
         select * 
         from users 
         where userid = #{userid} and
-        userpassword = #{userpassword}
+        password = #{password}
     </select>
 
-    <insert id="signup" parameterMap="com.ssafy.la.user.model.dto.UserVo">
-        insert into users(userid,userpassword, email, username, role)
-        values(#{userid}, #{userpassword}, #{email}, #{username}, #{role})
+    <insert id="signup" parameterType="com.ssafy.la.user.model.dto.UserVo">
+        insert into users(userid, password, email, username, role)
+        values(#{userid}, #{password}, #{email}, #{username}, #{role})
     </insert>
     
     <delete id="delete" parameterType="String">
@@ -34,9 +34,9 @@
         where userid = #{userid}
     </select>
 
-	<update id="userModify" parameterMap="com.ssafy.la.user.model.dto.UserVo">
+	<update id="userModify" parameterType="com.ssafy.la.user.model.dto.UserVo">
 		update users
-		set userpassword=#{userpassword}
+		set password=#{password}
 		where userid=#{userid}
 	</update>
 

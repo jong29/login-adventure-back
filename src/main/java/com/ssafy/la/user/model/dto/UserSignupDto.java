@@ -1,15 +1,7 @@
 package com.ssafy.la.user.model.dto;
 
 public class UserSignupDto {
-    private String uuid, userid, password, email, username, role;
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    private String uuid, userid, password, email, username;
 
     public String getUuid() {
         return uuid;

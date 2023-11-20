@@ -61,13 +61,13 @@ public class UserLoginLogout {
 		}
 		
 		// decrypt password
-		String userpassword = rsa.decrypt(loginRequestDto.getUserpassword(), privateKey);
+		String password = rsa.decrypt(loginRequestDto.getPassword(), privateKey);
 
 		loginRequestDto.setUserid(userid);
-		loginRequestDto.setUserpassword(userpassword);
+		loginRequestDto.setPassword(password);
 
 		String salt = securityMapper.readSalt(userid);
-		String hashedPassword = sha.SHA256(userpassword, salt);
+		String hashedPassword = sha.SHA256(password, salt);
 
 		UserVo user = userMapper.login(userid, hashedPassword);
 		if (user == null) {

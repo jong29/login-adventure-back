@@ -39,24 +39,31 @@ public class UserSignupDelete {
 
 	@Transactional
 	public void signup(UserSignupDto userRegisterDto) {
-		UserVo user = new UserVo(userRegisterDto.getUserid(), userRegisterDto.getPassword(), userRegisterDto.getEmail(),
-				userRegisterDto.getUsername(), userRegisterDto.getRole());
+		UserVo user = new UserVo();
+		user.setUserid(userRegisterDto.getUserid());
+		user.setUsername(userRegisterDto.getUsername());
+		user.setRole("unCertified");
+		user.setEmail(userRegisterDto.getEmail());
 
 		String pw = userRegisterDto.getPassword();
 		if (!isValidPassword(pw)) {
 			throw new MyException();
 		}
-		
-		String email = userRegisterDto.getPassword();
+		System.out.println("비밀번호 검증 성공");
+
+		String email = userRegisterDto.getEmail();
 		if (!isValidEmail(email)) {
 			throw new MyException();
 		}
+		System.out.println("이메일 검증 성공");
 
 		String salt = sha_256.getSalt();
 		user.setPassword(sha_256.SHA256(user.getPassword(), salt));
+		System.out.println("user 비밀번호:" + user.getPassword());
 
-		securityMapper.insertSecurity(user.getUserid(), salt); // salt 저장
+		System.out.println(user);
 		userMapper.signup(user); // 회원 저장
+		securityMapper.insertSecurity(user.getUserid(), salt); // salt 저장
 	}
 
 	@Transactional
@@ -76,7 +83,7 @@ public class UserSignupDelete {
 		if (password.length() < 8 || password.length() > 16) {
 			return false;
 		}
-		
+
 		// 비밀번호에 띄어쓰기가 포함되어 있는지 검증
         if (password.contains(" ")) {
             return false;
@@ -89,7 +96,7 @@ public class UserSignupDelete {
 
 		return matcher.matches();
 	}
-	
+
 	public static boolean isValidEmail(String email) {
         // 이메일 주소의 정규표현식 패턴
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";

@@ -6,6 +6,9 @@ public class UserVo {
 
 	private String userid, password, email, username, role;
 
+	public UserVo() {
+	}
+
 	public UserVo(String userid, String password, String email, String username, String role) {
 		super();
 		setUserid(userid);

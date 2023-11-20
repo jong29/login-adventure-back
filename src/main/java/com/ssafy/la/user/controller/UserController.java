@@ -10,12 +10,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.la.user.model.dao.UserRedisDao;
 import com.ssafy.la.user.model.dto.LoginRequestDto;
@@ -35,6 +30,7 @@ import com.ssafy.la.util.security.RSA_2048;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin("*")
 public class UserController {
 
 	@Autowired
@@ -42,28 +38,28 @@ public class UserController {
 
 	@Autowired
 	UserLoginLogout userLoginLogout;
-	
+
 	@Autowired
 	UserRedisDao userRedisDao;
-	
+
 	@Autowired
 	RSA_2048 rsa_2048;
-	
+
 	@Autowired
 	UserSignupDelete userSignupDelete;
-	
+
 	@Autowired
 	JWTProvider jwtProvider;
-	
+
 	@Autowired
 	UserViewModify userViewModify;
-	
+
 	@Autowired
 	UserCheckId userCheckId;
-	
+
 	@Value("${spring.rsa.live}")
-	private Long rsaLive; 
-	
+	private Long rsaLive;
+
 	@GetMapping("/checkId")
 	public ResponseEntity<CommonResponse> checkId(@RequestBody String userId) {
 		String name = userCheckId.checkId(userId);
@@ -72,32 +68,32 @@ public class UserController {
 		}
 		return SuccessResponse.toResponseEntity(200, "사용가능한 아이디입니다.", null);
 	}
-	
+
 	@GetMapping("/height")
 	public ResponseEntity<CommonResponse> height() {
-		String uuid = UUID.randomUUID().toString();	// uuid 생성
-		KeyPair keyPair = rsa_2048.createKey();	// key 생성
-		
+		String uuid = UUID.randomUUID().toString();    // uuid 생성
+		KeyPair keyPair = rsa_2048.createKey();    // key 생성
+
 		userRedisDao.saveToRedis("rsa:" + uuid, rsa_2048.keyToString(keyPair.getPrivate()), Duration.ofMillis(rsaLive)); // redis에 user key 저장
-		
+
 		String modulus = rsa_2048.getPublicKeyModulus((RSAPublicKey) keyPair.getPublic(), uuid);
 		String exponent = rsa_2048.getPublicKeyExponent((RSAPublicKey) keyPair.getPublic(), uuid);
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("uuid", uuid);
 		map.put("modulus", modulus);
 		map.put("exponent", exponent);
-		
+
 		return SuccessResponse.toResponseEntity(200, "키 발급 성공", map);
 	}
-	
-	@PostMapping("/reissue") 
+
+	@PostMapping("/reissue")
 	public ResponseEntity<CommonResponse> reissue(@RequestBody Map<String, String> body) {
-		
+
 		String userid = body.get("userid");
-		
+
 		Map<String, Object> data = userLoginLogout.reissue(userid);
-		
+
 		return SuccessResponse.toResponseEntity(200, "atk 재발급 성공", data);
 	}
 
@@ -105,14 +101,14 @@ public class UserController {
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequestDto loginRequestDto) {
 
 		Map<String, Object> username = userLoginLogout.login(loginRequestDto);
-		
+
 		return SuccessResponse.toResponseEntity(200, "로그인 성공", username);
 
 	}
 
-	@PostMapping("/regist")
-	public ResponseEntity<CommonResponse> register(@RequestBody UserSignupDto userRegisterDto) {
-		String uuid = userRegisterDto.getUuid();
+	@PostMapping("/signup")
+	public ResponseEntity<CommonResponse> signup(@RequestBody UserSignupDto userSignupDto) {
+		String uuid = userSignupDto.getUuid();
 		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 		if (privateKey == null) {
 			throw new MyException();
@@ -120,31 +116,30 @@ public class UserController {
 		/**
 		 * 복호화
 		 */
-		userRegisterDto.setPassword(rsa_2048.decrypt(userRegisterDto.getPassword(), privateKey));
-		userRegisterDto.setEmail(rsa_2048.decrypt(userRegisterDto.getEmail(), privateKey));
-		userRegisterDto.setUsername(rsa_2048.decrypt(userRegisterDto.getUsername(), privateKey));
-		userRegisterDto.setRole(rsa_2048.decrypt(userRegisterDto.getRole(), privateKey));
+		userSignupDto.setPassword(rsa_2048.decrypt(userSignupDto.getPassword(), privateKey));
+		userSignupDto.setEmail(rsa_2048.decrypt(userSignupDto.getEmail(), privateKey));
+		userSignupDto.setUsername(rsa_2048.decrypt(userSignupDto.getUsername(), privateKey));
 
-		userSignupDelete.signup(userRegisterDto);
+		userSignupDelete.signup(userSignupDto);
 
 		return SuccessResponse.toResponseEntity(201, "회원가입 성공", null);
 	}
 
 	@PostMapping("/delete")
 	public ResponseEntity<CommonResponse> delete(@RequestBody UserDeleteDto userDeleteDto) {
-		String uuid = userDeleteDto.getUserpassword();
+		String uuid = userDeleteDto.getPassword();
 		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 		if (privateKey == null) {
 			throw new MyException();
 		}
 
-		userDeleteDto.setUserpassword(rsa_2048.decrypt(userDeleteDto.getUserpassword(), privateKey));
+		userDeleteDto.setPassword(rsa_2048.decrypt(userDeleteDto.getPassword(), privateKey));
 
 		userSignupDelete.delete(userDeleteDto);
 
 		return SuccessResponse.toResponseEntity(200, "회원탈퇴 성공", null);
 	}
-	
+
 	@PostMapping("/modify")
 	public ResponseEntity<CommonResponse> modify(@RequestBody UserModifyDto userModifyDto) {
 		String uuid = userModifyDto.getUuid();
@@ -152,21 +147,21 @@ public class UserController {
 		if (privateKey == null) {
 			throw new MyException();
 		}
-		
+
 		userModifyDto.setCurPw(rsa_2048.decrypt(userModifyDto.getCurPw(), privateKey));
 		userModifyDto.setNewPw(rsa_2048.decrypt(userModifyDto.getNewPw(), privateKey));
-		
+
 		userViewModify.modify(userModifyDto);
-		
+
 		return SuccessResponse.toResponseEntity(200, "회원정보 수정 성공", null);
 	}
-	
+
 	@PostMapping("/logout")
 	public ResponseEntity<CommonResponse> logout(@RequestBody Map<String, String> req) {
 		String userid = req.get("userid");
-		
+
 		userLoginLogout.logout(userid);
-		
+
 		return SuccessResponse.toResponseEntity(200, "로그아웃 성공", null);
 	}
 }
