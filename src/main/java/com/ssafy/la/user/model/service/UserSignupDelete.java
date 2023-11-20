@@ -46,6 +46,14 @@ public class UserSignupDelete {
 
 	@Transactional
 	public void delete(UserDeleteDto userDeleteDto) {
+		String userid = userDeleteDto.getUserid();
+		
+		userMapper.delete(userid);
+		securityMapper.deleteSalt(userid);
+		userRedisDao.deleteFromRedis("atk:"+userid);
+		userRedisDao.deleteFromRedis("rtk:"+userid);
+		userRedisDao.deleteFromRedis("loginAttempt:"+userid);
+		userRedisDao.deleteFromRedis("rsa:"+userid);
 	}
 }
 

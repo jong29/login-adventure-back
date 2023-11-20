@@ -13,4 +13,9 @@
         select salt from usersecurity where userid=#{userid}
     </select>
 
+	<delete id="deleteSalt" parameterType="String">
+		delete from usersecurity
+		where userid=#{userid}
+	</delete>
+
 </mapper>

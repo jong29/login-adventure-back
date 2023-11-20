@@ -9,4 +9,6 @@ public interface SecurityMapper {
 	void insertSecurity(@Param("userid") String userid, @Param("salt") String salt);
 	
 	String readSalt(String userid);
+	
+	void deleteSalt(String userid);
 }
