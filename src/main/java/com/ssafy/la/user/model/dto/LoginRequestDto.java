@@ -4,7 +4,11 @@ import com.ssafy.la.util.exception.exceptions.MyException;
 
 public class LoginRequestDto {
 
-    private String userid, userpassword;
+    private String uuid, userid, userpassword;
+
+    public String getUuid() {
+        return uuid;
+    }
 
     public String getUserid() {
         return userid;
@@ -26,5 +30,12 @@ public class LoginRequestDto {
             throw new MyException();
         }
         this.userpassword = userpassword;
+    }
+
+    public void setUuid(String uuid) {
+        if (uuid == null || uuid.isEmpty()) {
+            throw new MyException();
+        }
+        this.uuid = uuid;
     }
 }
