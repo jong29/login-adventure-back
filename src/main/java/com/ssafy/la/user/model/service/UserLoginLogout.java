@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.la.user.model.dao.UserRedisDao;
 import com.ssafy.la.util.security.JWTProvider;
-import com.ssafy.la.util.security.SecurityUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +13,6 @@ import java.util.Map;
 @Service
 public class UserLoginLogout {
 	
-	@Autowired
-	SecurityUtil securityUtil;
 	@Autowired
 	UserRedisDao userRedisDao;
 	@Autowired

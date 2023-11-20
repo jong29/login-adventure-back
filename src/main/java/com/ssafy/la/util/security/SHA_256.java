@@ -6,6 +6,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SHA_256 {
 
     /**
@@ -13,7 +16,7 @@ public class SHA_256 {
      *
      * @return salt 값
      */
-    public static String getSalt() {
+    public String getSalt() {
         String salt = "";
         try {
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");    // SHA1PRNG 난수화 알고리즘
@@ -27,13 +30,13 @@ public class SHA_256 {
     }
 
     /**
-     * SHA512 해싱
+     * SHA256 해싱
      *
      * @param plaintext 평문
      * @param salt      salt
      * @return 평문과 salt 문자열을 합쳐 해싱된 값
      */
-    public static String SHA256(String plaintext, String salt) {
+    public String SHA256(String plaintext, String salt) {
         String hash = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256"); // 해시 함수 값을 구하기 위한 MessageDigest
@@ -52,7 +55,7 @@ public class SHA_256 {
      * @param salt      salt
      * @return 이중 해싱 값
      */
-    public static String DSHA256(String plaintext, String salt) { // 이중 해싱 (해시 충돌 시 사용)
+    public String DSHA256(String plaintext, String salt) { // 이중 해싱 (해시 충돌 시 사용)
         return SHA256(SHA256(plaintext, salt), salt);
     }
 

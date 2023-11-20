@@ -28,6 +28,15 @@ public class UserController {
 
 	@Autowired
 	UserLoginLogout ull;
+	
+	@Autowired
+	UserRedisDao userRedisDao;
+	
+	@Autowired
+	RSA_2048 rsa_2048;
+	
+	@Autowired
+	UserRegisterDelete userRegisterDelete;
 
 	@PostMapping("/login")
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequestDto loginRequestDto) {
@@ -38,7 +47,7 @@ public class UserController {
 	}
 
 	@PostMapping("/regist")
-	public ResponseEntity<SuccessResponse> register(@RequestBody UserRegisterDto userRegisterDto) {
+	public ResponseEntity<CommonResponse> register(@RequestBody UserRegisterDto userRegisterDto) {
 		String uuid = userRegisterDto.getUuid();
 		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 		if (privateKey == null) {
@@ -47,11 +56,11 @@ public class UserController {
 		/**
 		 * 복호화
 		 */
-		userRegisterDto.setUserid(RSA_2048.decrypt(userRegisterDto.getUserid(), privateKey));
-		userRegisterDto.setPassword(RSA_2048.decrypt(userRegisterDto.getPassword(), privateKey));
-		userRegisterDto.setEmail(RSA_2048.decrypt(userRegisterDto.getEmail(), privateKey));
-		userRegisterDto.setUsername(RSA_2048.decrypt(userRegisterDto.getUsername(), privateKey));
-		userRegisterDto.setRole(RSA_2048.decrypt(userRegisterDto.getRole(), privateKey));
+		userRegisterDto.setUserid(rsa_2048.decrypt(userRegisterDto.getUserid(), privateKey));
+		userRegisterDto.setPassword(rsa_2048.decrypt(userRegisterDto.getPassword(), privateKey));
+		userRegisterDto.setEmail(rsa_2048.decrypt(userRegisterDto.getEmail(), privateKey));
+		userRegisterDto.setUsername(rsa_2048.decrypt(userRegisterDto.getUsername(), privateKey));
+		userRegisterDto.setRole(rsa_2048.decrypt(userRegisterDto.getRole(), privateKey));
 
 		userRegisterDelete.register(userRegisterDto);
 
@@ -59,14 +68,14 @@ public class UserController {
 	}
 
 	@PostMapping("/delete")
-	public ResponseEntity<SuccessResponse> delete(@RequestBody UserDeleteDto userDeleteDto) {
+	public ResponseEntity<CommonResponse> delete(@RequestBody UserDeleteDto userDeleteDto) {
 		String uuid = userDeleteDto.getUuid();
 		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 		if (privateKey == null) {
 			throw new MyException();
 		}
 
-		userDeleteDto.setUserpassword(RSA_2048.decrypt(userDeleteDto.getUserpassword(), privateKey));
+		userDeleteDto.setUserpassword(rsa_2048.decrypt(userDeleteDto.getUserpassword(), privateKey));
 
 		userRegisterDelete.delete(userDeleteDto);
 

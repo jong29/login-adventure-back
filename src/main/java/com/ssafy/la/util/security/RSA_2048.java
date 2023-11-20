@@ -4,19 +4,23 @@ import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class RSA_2048 {
 	
-	public static String keyToString(Key key) {
+	public String keyToString(Key key) {
 		return Base64.getEncoder().encodeToString(key.getEncoded());
 	}
 	
-	public static String encrypt(String plaintext, String publickey) {
+	public String encrypt(String plaintext, String publickey) {
 		try {
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // RSA 암호화 키 공장 반환
 			byte[] publickeyBytes = Base64.getDecoder().decode(publickey.getBytes()); //
@@ -34,7 +38,7 @@ public class RSA_2048 {
 		}
 	}
 
-	public static String decrypt(String ciphertext, String privatekey) {
+	public String decrypt(String ciphertext, String privatekey) {
 		try {
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			byte[] privatekeyBytes = Base64.getDecoder().decode(privatekey.getBytes());
@@ -52,7 +56,7 @@ public class RSA_2048 {
 		}
 	}
 
-	public static byte[] hexToByteArray(String hex) {
+	public byte[] hexToByteArray(String hex) {
 		if (hex == null || hex.length() % 2 != 0) {
 			return new byte[] {};
 		}
@@ -65,15 +69,15 @@ public class RSA_2048 {
 		return bytes;
 	}
 
-	private static String encode(byte[] data) {
+	private String encode(byte[] data) {
 		return Base64.getEncoder().encodeToString(data);
 	}
 
-	private static byte[] decode(String data) {
+	private byte[] decode(String data) {
 		return Base64.getDecoder().decode(data);
 	}
 
-	public static KeyPair createKey() {
+	public KeyPair createKey() {
 		KeyPairGenerator gen;
 		KeyPair keypair = null;
 		try {
@@ -85,5 +89,14 @@ public class RSA_2048 {
 		}
 		return keypair;
 	}
+
+	public String getPublicKeyModulus(RSAPublicKey pk, String uuid) {
+		return pk.getModulus().toString(16);
+	}
+
+	public String getPublicKeyExponent(RSAPublicKey pk, String uuid) {
+		return pk.getPublicExponent().toString(16);
+	}
+
 
 }
