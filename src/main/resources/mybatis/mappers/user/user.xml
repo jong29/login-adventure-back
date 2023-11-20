@@ -4,8 +4,8 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.la.user.model.dao.UserMapper">
 
-    <select id="login" parameterType="String" resultType="String">
-        select username 
+    <select id="login" parameterType="String" resultType="com.ssafy.la.user.model.dto.UserVo">
+        select * 
         from users 
         where userid = #{userid} and
         userpassword = #{userpassword}

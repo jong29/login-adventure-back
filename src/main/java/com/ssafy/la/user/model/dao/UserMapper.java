@@ -5,10 +5,12 @@ import org.apache.ibatis.annotations.Param;
 
 import com.ssafy.la.user.model.dto.UserVo;
 
+import com.ssafy.la.user.model.dto.UserVo;
+
 @Mapper
 public interface UserMapper {
 
-	String login(@Param("userid")String userid, @Param("userpassword") String userpassword);
+	UserVo login(@Param("userid")String userid, @Param("userpassword") String userpassword);
 	
 	void signup(UserVo userVo);
 	
