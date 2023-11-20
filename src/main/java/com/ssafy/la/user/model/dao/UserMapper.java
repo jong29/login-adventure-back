@@ -15,4 +15,6 @@ public interface UserMapper {
 	void signup(UserVo userVo);
 	
 	void delete(String userid);
+	
+	void modify(UserVo userVo);
 }

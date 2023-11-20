@@ -11,7 +11,7 @@
         userpassword = #{userpassword}
     </select>
 
-    <insert id="signup" parameterType="com.ssafy.la.user.model.dto.UserVo">
+    <insert id="signup" parameterMap="com.ssafy.la.user.model.dto.UserVo">
         insert into users(userid,userpassword, email, username, role)
         values(#{userid}, #{userpassword}, #{email}, #{username}, #{role})
     </insert>
@@ -28,5 +28,10 @@
         where userid = #{userid}
     </select>
 
+	<update id="userModify" parameterMap="com.ssafy.la.user.model.dto.UserVo">
+		update users
+		set userpassword=#{userpassword}
+		where userid=#{userid}
+	</update>
 
 </mapper>

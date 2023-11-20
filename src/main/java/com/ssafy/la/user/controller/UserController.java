@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.la.user.model.dao.UserRedisDao;
 import com.ssafy.la.user.model.dto.LoginRequestDto;
 import com.ssafy.la.user.model.dto.UserDeleteDto;
+import com.ssafy.la.user.model.dto.UserModifyDto;
 import com.ssafy.la.user.model.dto.UserSignupDto;
 import com.ssafy.la.user.model.service.UserLoginLogout;
 import com.ssafy.la.user.model.service.UserService;
 import com.ssafy.la.user.model.service.UserSignupDelete;
+import com.ssafy.la.user.model.service.UserViewModify;
 import com.ssafy.la.util.common.CommonResponse;
 import com.ssafy.la.util.common.SuccessResponse;
 import com.ssafy.la.util.exception.exceptions.MyException;
@@ -51,6 +53,9 @@ public class UserController {
 	
 	@Autowired
 	JWTProvider jwtProvider;
+	
+	@Autowired
+	UserViewModify userViewModify;
 	
 	@Value("${spring.rsa.live}")
 	private Long rsaLive; 
@@ -125,5 +130,21 @@ public class UserController {
 		userSignupDelete.delete(userDeleteDto);
 
 		return SuccessResponse.toResponseEntity(200, "회원탈퇴 성공", null);
+	}
+	
+	@PostMapping("/modify")
+	public ResponseEntity<CommonResponse> modify(@RequestBody UserModifyDto userModifyDto) {
+		String uuid = userModifyDto.getUuid();
+		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
+		if (privateKey == null) {
+			throw new MyException();
+		}
+		
+		userModifyDto.setCurPw(rsa_2048.decrypt(userModifyDto.getCurPw(), privateKey));
+		userModifyDto.setNewPw(rsa_2048.decrypt(userModifyDto.getNewPw(), privateKey));
+		
+		userViewModify.modify(userModifyDto);
+		
+		return SuccessResponse.toResponseEntity(200, "회원정보 수정 성공", null);
 	}
 }
