@@ -160,4 +160,13 @@ public class UserController {
 		
 		return SuccessResponse.toResponseEntity(200, "회원정보 수정 성공", null);
 	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<CommonResponse> logout(@RequestBody Map<String, String> req) {
+		String userid = req.get("userid");
+		
+		userLoginLogout.logout(userid);
+		
+		return SuccessResponse.toResponseEntity(200, "로그아웃 성공", null);
+	}
 }
