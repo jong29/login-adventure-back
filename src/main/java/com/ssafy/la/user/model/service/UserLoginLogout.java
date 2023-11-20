@@ -69,26 +69,41 @@ public class UserLoginLogout {
 		String salt = securityMapper.readSalt(userid);
 		String hashedPassword = sha.SHA256(userpassword, salt);
 
-		UserVo res = userMapper.login(userid, hashedPassword);
-		if (res == null) {
+		UserVo user = userMapper.login(userid, hashedPassword);
+		if (user == null) {
 			throw new LoginFailException();
 		}
 		
 		//create and return jwt
-		String atk = jwtProvider.createAccessToken(res, atkExp, salt);
+		String atk = jwtProvider.createAccessToken(user, atkExp, salt);
 		String rtk = jwtProvider.createRefreshToken(userid, rtkExp, salt);
 		
 		// put jwt in redis
 		userRedisDao.saveToRedis("atk:" + userid, atk, Duration.ofMillis(atkExp));
 		userRedisDao.saveToRedis("rtk:" + userid, rtk, Duration.ofMillis(rtkExp));
 		
-		Map<String, Object> userinfo = new HashMap<>();
-		userinfo.put("userid", userid);
-		userinfo.put("atk", atk);
-		userinfo.put("rtk", rtk);
-		return userinfo;
+		Map<String, Object> res = new HashMap<>();
+		res.put("userid", userid);
+		res.put("atk", atk);
+		res.put("rtk", rtk);
+		return res;
 	}
 	
+	public Map<String, Object> reissue(String userid) {
+		String salt = securityMapper.readSalt(userid);
+		UserVo user = userMapper.userinfo(userid);
+		
+		//create and return jwt
+		String atk = jwtProvider.createAccessToken(user, atkExp, salt);
+		
+		// put jwt in redis
+		userRedisDao.saveToRedis("atk:" + userid, atk, Duration.ofMillis(atkExp));
+		
+		Map<String, Object> res = new HashMap<>();
+		res.put("userid", userid);
+		res.put("atk", atk);
+		return res;
+	}
 	
 	public boolean loginLimitCheck(String userid) {
 		Long LoginRequestCount = userRedisDao.incrementAttempt(userid);

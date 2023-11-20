@@ -7,22 +7,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.ssafy.la.user.model.dao.UserRedisDao;
-import com.ssafy.la.user.model.dto.UserDeleteDto;
-import com.ssafy.la.user.model.dto.UserSignupDto;
-import com.ssafy.la.user.model.service.UserSignupDelete;
-import com.ssafy.la.util.exception.exceptions.MyException;
-import com.ssafy.la.util.security.RSA_2048;
-import com.ssafy.la.user.model.dto.LoginRequestDto;
-import com.ssafy.la.user.model.service.UserLoginLogout;
-import com.ssafy.la.util.common.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.la.user.model.dao.UserRedisDao;
+import com.ssafy.la.user.model.dto.LoginRequestDto;
+import com.ssafy.la.user.model.dto.UserDeleteDto;
+import com.ssafy.la.user.model.dto.UserSignupDto;
+import com.ssafy.la.user.model.service.UserLoginLogout;
 import com.ssafy.la.user.model.service.UserService;
+import com.ssafy.la.user.model.service.UserSignupDelete;
+import com.ssafy.la.util.common.CommonResponse;
 import com.ssafy.la.util.common.SuccessResponse;
+import com.ssafy.la.util.exception.exceptions.MyException;
+import com.ssafy.la.util.security.JWTProvider;
+import com.ssafy.la.util.security.RSA_2048;
 
 @RestController
 @RequestMapping("/user")
@@ -32,7 +38,7 @@ public class UserController {
 	UserService userService;
 
 	@Autowired
-	UserLoginLogout ull;
+	UserLoginLogout userLoginLogout;
 	
 	@Autowired
 	UserRedisDao userRedisDao;
@@ -42,6 +48,9 @@ public class UserController {
 	
 	@Autowired
 	UserSignupDelete userSignupDelete;
+	
+	@Autowired
+	JWTProvider jwtProvider;
 	
 	@Value("${spring.rsa.live}")
 	private Long rsaLive; 
@@ -63,15 +72,22 @@ public class UserController {
 		
 		return SuccessResponse.toResponseEntity(200, "키 발급 성공", map);
 	}
+	
+	@PostMapping("/reissue") 
+	public ResponseEntity<CommonResponse> reissue(@RequestBody Map<String, String> body) {
+		
+		String userid = body.get("userid");
+		
+		Map<String, Object> data = userLoginLogout.reissue(userid);
+		
+		return SuccessResponse.toResponseEntity(200, "atk 재발급 성공", data);
+	}
 
 	@PostMapping("/login")
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequestDto loginRequestDto) {
 
-		Map<String, Object> username = ull.login(loginRequestDto);
+		Map<String, Object> username = userLoginLogout.login(loginRequestDto);
 		
-		// redis 로그인 시도 횟수 확인
-		
-
 		return SuccessResponse.toResponseEntity(200, "로그인 성공", username);
 
 	}
