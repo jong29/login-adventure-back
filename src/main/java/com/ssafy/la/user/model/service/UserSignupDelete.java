@@ -76,6 +76,11 @@ public class UserSignupDelete {
 		if (password.length() < 8 || password.length() > 16) {
 			return false;
 		}
+		
+		// 비밀번호에 띄어쓰기가 포함되어 있는지 검증
+        if (password.contains(" ")) {
+            return false;
+        }
 
 		// 최소한 하나 이상의 문자, 숫자, 특수문자를 포함하는지 검증
 		String regex = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$";
