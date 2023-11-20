@@ -16,6 +16,25 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `usersecurity`
+--
+drop DATABASE IF EXISTS `security`;
+
+create database IF NOT EXISTS `security`;
+
+use security;
+
+DROP TABLE IF EXISTS `usersecurity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usersecurity` (
+  `userid` varchar(50) NOT NULL,
+  `salt` varchar(100) NOT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping routines for database 'security'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -28,4 +47,4 @@
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-19 12:06:37
+-- Dump completed on 2023-11-20 13:19:01
