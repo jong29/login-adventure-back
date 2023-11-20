@@ -89,6 +89,11 @@ public class UserLoginLogout {
 		return res;
 	}
 	
+	public void logout(String userid) {
+		userRedisDao.deleteFromRedis("atk:"+userid);
+		userRedisDao.deleteFromRedis("rtk:"+userid);
+	}
+	
 	public Map<String, Object> reissue(String userid) {
 		String salt = securityMapper.readSalt(userid);
 		UserVo user = userMapper.userinfo(userid);
