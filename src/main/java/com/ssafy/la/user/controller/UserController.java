@@ -86,7 +86,6 @@ public class UserController {
 		/**
 		 * 복호화
 		 */
-		userRegisterDto.setUserid(rsa_2048.decrypt(userRegisterDto.getUserid(), privateKey));
 		userRegisterDto.setPassword(rsa_2048.decrypt(userRegisterDto.getPassword(), privateKey));
 		userRegisterDto.setEmail(rsa_2048.decrypt(userRegisterDto.getEmail(), privateKey));
 		userRegisterDto.setUsername(rsa_2048.decrypt(userRegisterDto.getUsername(), privateKey));
@@ -99,7 +98,7 @@ public class UserController {
 
 	@PostMapping("/delete")
 	public ResponseEntity<CommonResponse> delete(@RequestBody UserDeleteDto userDeleteDto) {
-		String uuid = userDeleteDto.getUuid();
+		String uuid = userDeleteDto.getUserpassword();
 		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 		if (privateKey == null) {
 			throw new MyException();
