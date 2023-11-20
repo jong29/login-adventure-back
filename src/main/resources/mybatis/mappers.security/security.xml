@@ -5,14 +5,12 @@
 <mapper namespace="com.ssafy.la.user.model.security.dao.SecurityMapper">
 
 
-    <insert id="insertSecurity" parameterType="com.ssafy.web.member.dto.SecDto">
-        insert into openeg_security(userid,salt,seckey) values(#{userid}, #{salt}, #{seckey})
+    <insert id="insertSecurity" parameterType="String">
+        insert into usersecurity(userid,salt) values(#{userid}, #{salt})
     </insert>
 
     <select id="readSalt" parameterType="String" resultType="String">
-        select salt from openeg_security where userid=#{userid}
+        select salt from usersecurity where userid=#{userid}
     </select>
-
-
 
 </mapper>
