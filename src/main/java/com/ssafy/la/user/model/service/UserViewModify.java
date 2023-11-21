@@ -1,10 +1,10 @@
 package com.ssafy.la.user.model.service;
 
+import com.ssafy.la.user.model.dto.UserInfoResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.la.user.model.dao.UserMapper;
-import com.ssafy.la.user.model.dao.UserRedisDao;
 import com.ssafy.la.user.model.dto.UserModifyDto;
 import com.ssafy.la.user.model.dto.UserVo;
 import com.ssafy.la.user.model.security.dao.SecurityMapper;
@@ -18,8 +18,6 @@ public class UserViewModify {
 	
 	@Autowired
 	JWTProvider jwtProvider;
-	
-	UserRedisDao userRedisDao;
 
 	@Autowired
 	UserMapper userMapper;
@@ -47,4 +45,21 @@ public class UserViewModify {
 		userMapper.modify(user);
 	}
 
+	public UserInfoResponseDto userinfo(String userid) {
+		UserVo user = userMapper.userinfo(userid);
+
+		UserInfoResponseDto res = new UserInfoResponseDto();
+		String[] split = user.getEmail().split("@");
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(split[0].charAt(0));
+		for (int i = 1; i < split[0].length(); i++) {
+			sb.append("*");
+		}
+		sb.append("@").append(split[1]);
+		String coveredEmail = sb.toString();
+		res.setUsername(user.getUsername());
+		res.setEmail(coveredEmail);
+		return res;
+	}
 }

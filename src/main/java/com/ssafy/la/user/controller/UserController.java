@@ -7,16 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ssafy.la.user.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.la.user.model.dao.UserRedisDao;
-import com.ssafy.la.user.model.dto.LoginRequestDto;
-import com.ssafy.la.user.model.dto.UserDeleteDto;
-import com.ssafy.la.user.model.dto.UserModifyDto;
-import com.ssafy.la.user.model.dto.UserSignupDto;
 import com.ssafy.la.user.model.service.UserCheckId;
 import com.ssafy.la.user.model.service.UserLoginLogout;
 import com.ssafy.la.user.model.service.UserService;
@@ -154,6 +151,17 @@ public class UserController {
 		userViewModify.modify(userModifyDto);
 
 		return SuccessResponse.toResponseEntity(200, "회원정보 수정 성공", null);
+	}
+
+	@PostMapping("/userinfo")
+	public ResponseEntity<CommonResponse> userinfo(@RequestBody Map<String, String> request) {
+
+		UserInfoResponseDto userInfoResponseDto = userViewModify.userinfo(request.get("userid"));
+		Map<String, Object> data = new HashMap<>();
+		data.put("username", userInfoResponseDto.getUsername());
+		data.put("email", userInfoResponseDto.getEmail());
+
+		return SuccessResponse.toResponseEntity(200, "회원정보 조회 성공", data);
 	}
 
 	@PostMapping("/logout")
