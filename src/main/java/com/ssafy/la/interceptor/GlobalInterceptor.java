@@ -50,9 +50,9 @@ public class GlobalInterceptor implements HandlerInterceptor{
 		String requestbody = (String) request.getAttribute("requestBody");
 		System.out.println(requestbody);
 
-		if (request.getMethod().equals("OPTIONS")) {
-			return true;
-		}
+//		if (request.getMethod().equals("OPTIONS")) {
+//			return true;
+//		}
 
 		String requestURI = request.getRequestURI();
 		String[] splitURI = requestURI.split("/");
