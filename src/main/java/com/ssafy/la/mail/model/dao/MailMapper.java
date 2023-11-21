@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface MailMapper {
 
     void insertToken(MailTokenVo mailTokenVo);
+    
+    String verifyToken(String verifytoken);
 
     String verifyToken(String verifytoken);
 

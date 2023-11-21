@@ -19,7 +19,7 @@ class MailServiceTest {
     @Test
     void  sendVerficiationEmail() {
 
-        UserVo user = new UserVo("jongool", "1234", "jongwoop97@gmail.com", "jongwoo", "admin");
+        UserVo user = new UserVo("jongool", "1234", "1996joon@naver.com", "jongwoo", "admin");
         mailService.sendVerficiationEmail(user);
 //        verify(mailSender, times(1)).send((MimeMessage) any());
 
