@@ -40,4 +40,10 @@
 		where userid=#{userid}
 	</update>
 
+    <update id="verifyUser" parameterType="String">
+        update users
+        set role="verified"
+        where email = #{email}
+    </update>
+
 </mapper>

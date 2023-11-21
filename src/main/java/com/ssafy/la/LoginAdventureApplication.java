@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@MapperScan(basePackages = "com.ssafy.la.user.model.dao", sqlSessionFactoryRef = "loginAdventureSqlSessionFactory")
+@MapperScan(basePackages = "com.ssafy.la.*.model.dao", sqlSessionFactoryRef = "loginAdventureSqlSessionFactory")
 @MapperScan(basePackages = "com.ssafy.la.user.model.security.dao", sqlSessionFactoryRef = "securitySqlSessionFactory")
 public class LoginAdventureApplication {
 

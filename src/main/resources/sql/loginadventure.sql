@@ -72,8 +72,7 @@ drop table if exists `mail`;
 
 CREATE TABLE `mail` (
   `email` VARCHAR(100) NOT NULL primary key,
-  `verifytoken` VARCHAR(100) NOT NULL,
-  Foreign Key (`email`) REFERENCES `users` (`email`)
+  `verifytoken` VARCHAR(100) NOT NULL
 );
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;

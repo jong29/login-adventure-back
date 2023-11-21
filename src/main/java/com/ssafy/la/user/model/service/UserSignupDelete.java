@@ -1,5 +1,6 @@
 package com.ssafy.la.user.model.service;
 
+import com.ssafy.la.mail.model.service.MailService;
 import com.ssafy.la.user.model.dao.UserMapper;
 import com.ssafy.la.user.model.dto.UserDeleteDto;
 import com.ssafy.la.user.model.dto.UserSignupDto;
@@ -14,7 +15,6 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.la.mail.service.MailService;
 import com.ssafy.la.user.model.dao.UserRedisDao;
 import org.springframework.transaction.annotation.Transactional;
 

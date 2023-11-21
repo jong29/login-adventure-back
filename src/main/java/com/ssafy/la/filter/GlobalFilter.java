@@ -80,6 +80,8 @@ public class GlobalFilter extends OncePerRequestFilter {
 				}
 			}
 			break;
+		case "mail":
+			break;
 		default:
 			throw new MyException();
 		}
