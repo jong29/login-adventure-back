@@ -23,7 +23,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 	}
 
 	@Override
-	public ServletInputStream getInputStream() throws IOException {
+	public ServletInputStream getInputStream() {
 		final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 		return  new ServletImpl(bis);
 	}
