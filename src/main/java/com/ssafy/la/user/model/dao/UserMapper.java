@@ -19,4 +19,6 @@ public interface UserMapper {
 	void modify(UserVo userVo);
 	
 	String checkId(String userId);
+
+	void verifyUser(String email);
 }

@@ -8,4 +8,8 @@ public interface MailMapper {
 
     void insertToken(MailTokenVo mailTokenVo);
 
+    String verifyToken(String verifytoken);
+
+    void deleteToken(String verifytoken);
+
 }
