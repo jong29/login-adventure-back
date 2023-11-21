@@ -10,12 +10,6 @@ public interface MailMapper {
     
     String verifyToken(String verifytoken);
 
-    String verifyToken(String verifytoken);
-
-    void deleteToken(String verifytoken);
-
-    String verifyToken(String verifytoken);
-
     void deleteToken(String verifytoken);
 
 }
