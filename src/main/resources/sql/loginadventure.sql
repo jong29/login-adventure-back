@@ -63,10 +63,18 @@ CREATE TABLE `users` (
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+CREATE INDEX idx_users_email ON `users` (`email`);
 --
 -- Dumping data for table `users`
 --
+
+drop table if exists `mail`;
+
+CREATE TABLE `mail` (
+  `email` VARCHAR(100) NOT NULL primary key,
+  `verifytoken` VARCHAR(100) NOT NULL,
+  Foreign Key (`email`) REFERENCES `users` (`email`)
+);
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
