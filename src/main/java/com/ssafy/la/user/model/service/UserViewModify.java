@@ -19,7 +19,6 @@ public class UserViewModify {
 	@Autowired
 	JWTProvider jwtProvider;
 	
-	@Autowired
 	UserRedisDao userRedisDao;
 
 	@Autowired

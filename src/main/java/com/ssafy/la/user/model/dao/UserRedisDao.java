@@ -4,12 +4,13 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
 public class UserRedisDao {
-
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     
