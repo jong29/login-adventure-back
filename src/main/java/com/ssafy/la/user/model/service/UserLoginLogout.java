@@ -45,20 +45,19 @@ public class UserLoginLogout {
 		String uuid = loginRequestDto.getUuid();
 
 		// search for uuid in redis
-		String privateKey = userRedisDao.readFromRedis(uuid);
+		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 
 		// if not in redis throw exception
 		if (privateKey == null) {
 			throw new KeyTimeoutException();
 		}
 
-		// decrypt id
-		String userid = rsa.decrypt(loginRequestDto.getUserid(), privateKey);
+		String userid = loginRequestDto.getUserid();
 		
 		// check login limit
-		if (!loginLimitCheck(userid)) {
-			throw new MyException();
-		}
+//		if (!loginLimitCheck(userid)) {
+//			throw new MyException();
+//		}
 		
 		// decrypt password
 		String password = rsa.decrypt(loginRequestDto.getPassword(), privateKey);

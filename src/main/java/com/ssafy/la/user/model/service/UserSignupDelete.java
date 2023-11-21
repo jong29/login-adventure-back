@@ -46,19 +46,19 @@ public class UserSignupDelete {
 		user.setEmail(userRegisterDto.getEmail());
 
 		String pw = userRegisterDto.getPassword();
-		if (!isValidPassword(pw)) {
-			throw new MyException();
-		}
+//		if (!isValidPassword(pw)) {
+//			throw new MyException();
+//		}
 		
 		String email = userRegisterDto.getEmail();
 		if (!isValidEmail(email)) {
 			throw new MyException();
 		}
 		
-		mailService.sendVerficiationEmail(user);
+//		mailService.sendVerficiationEmail(user);
 
 		String salt = sha_256.getSalt();
-		user.setPassword(sha_256.SHA256(user.getPassword(), salt));
+		user.setPassword(sha_256.SHA256(pw, salt));
 		System.out.println("user 비밀번호:" + user.getPassword());
 
 		System.out.println(user);
