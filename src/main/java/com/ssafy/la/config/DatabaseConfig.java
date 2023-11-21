@@ -30,8 +30,7 @@ public class DatabaseConfig {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(loginAdventureDataSource);
         sqlSessionFactoryBean.setMapperLocations(
-                new PathMatchingResourcePatternResolver().getResources("classpath:/mybatis/mappers/user/*.xml"));
-
+                new PathMatchingResourcePatternResolver().getResources("classpath:/mybatis/mappers/loginadventure/*/*.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 

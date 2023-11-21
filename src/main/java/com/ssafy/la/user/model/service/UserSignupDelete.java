@@ -49,13 +49,13 @@ public class UserSignupDelete {
 		if (!isValidPassword(pw)) {
 			throw new MyException();
 		}
-		System.out.println("비밀번호 검증 성공");
-
+		
 		String email = userRegisterDto.getEmail();
 		if (!isValidEmail(email)) {
 			throw new MyException();
 		}
-		System.out.println("이메일 검증 성공");
+		
+		mailService.sendVerficiationEmail(user);
 
 		String salt = sha_256.getSalt();
 		user.setPassword(sha_256.SHA256(user.getPassword(), salt));

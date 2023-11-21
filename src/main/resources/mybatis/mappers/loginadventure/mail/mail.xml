@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.la.mail.model.dao.MailMapper">
+
+    <select id="checkToken" parameterType="com.ssafy.la.mail.model.dto.MailTokenVo" resultType="String">
+        select email
+        from mail
+        where email = #{email} and verifytoken = {verifytoken}
+    </select>
+
+    <insert id="insertToken" parameterType="com.ssafy.la.mail.model.dto.MailVo">
+        insert into users(userid,userpassword, email, username, role)
+        values(#{userid}, #{userpassword}, #{email}, #{username}, #{role})
+    </insert>
+
+</mapper>
