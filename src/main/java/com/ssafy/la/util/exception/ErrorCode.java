@@ -1,15 +1,13 @@
 package com.ssafy.la.util.exception;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.REQUEST_TIMEOUT;
-
 import java.util.Arrays;
 
 import com.ssafy.la.util.exception.exceptions.*;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public enum ErrorCode {
@@ -18,6 +16,7 @@ public enum ErrorCode {
     KEY_TIMEOUT_ERROR(REQUEST_TIMEOUT, 13, "비대칭키 저장 시간 만료.", KeyTimeoutException.class),
     LOGIN_ERROR(BAD_REQUEST, 14, "로그인을 다시 시도해 주세요.", LoginFailException.class),
     TOKEN_EXPIRED_ERROR(REQUEST_TIMEOUT, 15, "Access Token이 만료됐습니다.", AtkTimeoutException.class),
+    TOO_MANY_REQUESTS_ERROR(TOO_MANY_REQUESTS, 16, "DOS 공격 의심중... 너 IP Ban이야", TooManyRequestsException.class),
 //    REGISTER_ERROR(BAD_REQUEST, "회원가입을 다시 시도해 주세요.", RegistFailException.class),
 //    PLAN_REGIST_ERROR(BAD_REQUEST,"조회할 게시글을 다시 확인해주세요", PlanReigstException.class),
 //    NOT_LOGINED_ERROR(BAD_REQUEST,"로그인을 다시 해주세요", NotLoginedException.class),

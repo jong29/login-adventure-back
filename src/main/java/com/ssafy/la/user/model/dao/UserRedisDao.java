@@ -40,5 +40,13 @@ public class UserRedisDao {
         }
     	return attempts;
     }
+
+    public long incrementRequest(String key) {
+        Long requests = redisTemplate.opsForValue().increment("req:"+key);
+        if (requests.equals(1L)) {
+            redisTemplate.expire("req:"+key, 300L, TimeUnit.SECONDS);
+        }
+        return requests;
+    }
     
 }

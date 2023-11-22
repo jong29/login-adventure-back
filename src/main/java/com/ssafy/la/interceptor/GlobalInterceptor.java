@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ssafy.la.util.exception.exceptions.AtkTimeoutException;
+import com.ssafy.la.util.exception.exceptions.TooManyRequestsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -47,6 +48,12 @@ public class GlobalInterceptor implements HandlerInterceptor{
 
 		String requestURI = request.getRequestURI();
 		String[] splitURI = requestURI.split("/");
+
+		// dos 방어 모든 리쉐스트이기 떄문에 여기서 요청 횟수 추적
+		String requestIP = request.getRemoteAddr();
+		long cumulativeRequests = userRedisDao.incrementRequest(requestIP);
+		if (cumulativeRequests > 500) throw new TooManyRequestsException();
+
 		switch (splitURI[1]) {
 			case "user":
 			case "board":
