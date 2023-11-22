@@ -17,7 +17,7 @@ import com.ssafy.la.user.model.dao.UserRedisDao;
 import com.ssafy.la.user.model.service.UserCheckId;
 import com.ssafy.la.user.model.service.UserLoginLogout;
 import com.ssafy.la.user.model.service.UserService;
-import com.ssafy.la.user.model.service.UserSignupDelete;
+import com.ssafy.la.user.model.service.UserSignupGoodbye;
 import com.ssafy.la.user.model.service.UserViewModify;
 import com.ssafy.la.util.common.CommonResponse;
 import com.ssafy.la.util.common.SuccessResponse;
@@ -42,7 +42,7 @@ public class UserController {
 	RSA_2048 rsa_2048;
 
 	@Autowired
-	UserSignupDelete userSignupDelete;
+	UserSignupGoodbye userSignupGoodbye;
 
 	@Autowired
 	JWTProvider jwtProvider;
@@ -117,24 +117,9 @@ public class UserController {
 		userSignupDto.setEmail(rsa_2048.decrypt(userSignupDto.getEmail(), privateKey));
 		userSignupDto.setUsername(rsa_2048.decrypt(userSignupDto.getUsername(), privateKey));
 
-		userSignupDelete.signup(userSignupDto);
+		userSignupGoodbye.signup(userSignupDto);
 
 		return SuccessResponse.toResponseEntity(201, "회원가입 성공", null);
-	}
-
-	@PostMapping("/delete")
-	public ResponseEntity<CommonResponse> delete(@RequestBody UserDeleteDto userDeleteDto) {
-		String uuid = userDeleteDto.getPassword();
-		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
-		if (privateKey == null) {
-			throw new MyException();
-		}
-
-		userDeleteDto.setPassword(rsa_2048.decrypt(userDeleteDto.getPassword(), privateKey));
-
-		userSignupDelete.delete(userDeleteDto);
-
-		return SuccessResponse.toResponseEntity(200, "회원탈퇴 성공", null);
 	}
 
 	@PostMapping("/modify")
@@ -171,5 +156,22 @@ public class UserController {
 		userLoginLogout.logout(userid);
 
 		return SuccessResponse.toResponseEntity(200, "로그아웃 성공", null);
+	}
+	
+	@PostMapping("/goodbye")
+	public ResponseEntity<CommonResponse> goodbye(@RequestBody Map<String, String> request) {
+		String uuid = request.get("uuid");
+		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
+		if (privateKey == null) {
+			throw new MyException();
+		}
+		String userid = request.get("userid");
+		String password = request.get("password");
+		
+		password = rsa_2048.decrypt(password, privateKey);
+		
+		userSignupGoodbye.goodbye(userid, password);
+		
+		return SuccessResponse.toResponseEntity(200, "Bye", null);
 	}
 }

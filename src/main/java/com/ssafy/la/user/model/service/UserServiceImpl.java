@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
 	
 	@Autowired
-	UserSignupDelete userRegisterDelete;
+	UserSignupGoodbye userRegisterDelete;
 	
 	@Autowired
 	UserLoginLogout userLoginLogout;

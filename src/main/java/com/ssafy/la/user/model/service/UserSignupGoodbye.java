@@ -2,7 +2,6 @@ package com.ssafy.la.user.model.service;
 
 import com.ssafy.la.mail.model.service.MailService;
 import com.ssafy.la.user.model.dao.UserMapper;
-import com.ssafy.la.user.model.dto.UserDeleteDto;
 import com.ssafy.la.user.model.dto.UserSignupDto;
 import com.ssafy.la.user.model.dto.UserVo;
 import com.ssafy.la.user.model.security.dao.SecurityMapper;
@@ -19,7 +18,7 @@ import com.ssafy.la.user.model.dao.UserRedisDao;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserSignupDelete {
+public class UserSignupGoodbye {
 	// 회원 가입, 탈퇴
 
 	@Autowired
@@ -67,10 +66,11 @@ public class UserSignupDelete {
 	}
 
 	@Transactional
-	public void delete(UserDeleteDto userDeleteDto) {
-		String userid = userDeleteDto.getUserid();
-
-		userMapper.delete(userid);
+	public void goodbye(String userid, String password) {
+		String salt = securityMapper.readSalt(userid);
+		password = sha_256.SHA256(password, salt);
+		
+		userMapper.goodbye(userid, password);
 		securityMapper.deleteSalt(userid);
 		userRedisDao.deleteFromRedis("atk:" + userid);
 		userRedisDao.deleteFromRedis("rtk:" + userid);

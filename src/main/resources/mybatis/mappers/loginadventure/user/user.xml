@@ -22,7 +22,7 @@
         values(#{userid}, #{password}, #{email}, #{username}, #{role})
     </insert>
     
-    <delete id="delete" parameterType="String">
+    <delete id="goodbye" parameterType="String">
     	delete from users
     	where userid = #{userid}
     </delete>
