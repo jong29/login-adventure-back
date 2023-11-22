@@ -56,13 +56,18 @@ public class UserController {
 	@Value("${spring.rsa.live}")
 	private Long rsaLive;
 
-	@GetMapping("/checkId")
-	public ResponseEntity<CommonResponse> checkId(@RequestBody String userId) {
-		String name = userCheckId.checkId(userId);
-		if (name != null) {
-			throw new MyException();
-		}
-		return SuccessResponse.toResponseEntity(200, "사용가능한 아이디입니다.", null);
+	@PostMapping("/checkId")
+	public ResponseEntity<CommonResponse> checkId(@RequestBody Map<String, String> body) {
+		String userId = body.get("userid");
+		Map<String, Object> data = userCheckId.checkId(userId);
+		return SuccessResponse.toResponseEntity(200, "사용가능한 아이디입니다.", data);
+	}
+
+	@PostMapping("/checkEmail")
+	public ResponseEntity<CommonResponse> checkEmail(@RequestBody Map<String, String> body) {
+		String email = body.get("email");
+		Map<String, Object> data = userCheckId.checkEmail(email);
+		return SuccessResponse.toResponseEntity(200, "사용가능한 이메일입니다.", data);
 	}
 
 	@GetMapping("/height")

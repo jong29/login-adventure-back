@@ -5,10 +5,16 @@
 <mapper namespace="com.ssafy.la.user.model.dao.UserMapper">
 
 	<select id="checkId" parameterType="String" resultType="String">
-		select name
+		select username
 		from users
 		where userid = #{userid}
 	</select>
+
+    <select id="checkEmail" parameterType="String" resultType="String">
+        select username
+        from users
+        where email = #{email}
+    </select>
 
     <select id="login" parameterType="String" resultType="com.ssafy.la.user.model.dto.UserVo">
         select * 

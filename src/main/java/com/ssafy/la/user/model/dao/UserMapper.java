@@ -20,5 +20,7 @@ public interface UserMapper {
 	
 	String checkId(String userId);
 
+	String checkEmail(String email);
+
 	void verifyUser(String email);
 }
