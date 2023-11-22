@@ -27,7 +27,6 @@ import com.ssafy.la.util.security.RSA_2048;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin("*")
 public class UserController {
 
 	@Autowired
@@ -68,6 +67,7 @@ public class UserController {
 
 	@GetMapping("/height")
 	public ResponseEntity<CommonResponse> height() {
+		System.out.println("hello");
 		String uuid = UUID.randomUUID().toString();    // uuid 생성
 		KeyPair keyPair = rsa_2048.createKey();    // key 생성
 
