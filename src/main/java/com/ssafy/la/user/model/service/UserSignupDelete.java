@@ -46,9 +46,9 @@ public class UserSignupDelete {
 		user.setEmail(userRegisterDto.getEmail());
 
 		String pw = userRegisterDto.getPassword();
-//		if (!isValidPassword(pw)) {
-//			throw new MyException();
-//		}
+		if (!isValidPassword(pw)) {
+			throw new MyException();
+		}
 		
 		String email = userRegisterDto.getEmail();
 		if (!isValidEmail(email)) {
@@ -85,7 +85,7 @@ public class UserSignupDelete {
 		}
 
 		// 비밀번호에 띄어쓰기가 포함되어 있는지 검증
-        if (password.contains(" ")) {
+        if (password.contains(" ") || password.contains("<") || password.contains(">")) {
             return false;
         }
 
