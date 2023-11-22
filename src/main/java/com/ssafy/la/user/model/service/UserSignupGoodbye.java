@@ -36,7 +36,7 @@ public class UserSignupGoodbye {
 	@Autowired
 	SHA_256 sha_256;
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void signup(UserSignupDto userRegisterDto) {
 		UserVo user = new UserVo();
 		user.setUserid(userRegisterDto.getUserid());
@@ -70,12 +70,12 @@ public class UserSignupGoodbye {
 		String salt = securityMapper.readSalt(userid);
 		password = sha_256.SHA256(password, salt);
 		
-		userMapper.goodbye(userid, password);
-		securityMapper.deleteSalt(userid);
 		userRedisDao.deleteFromRedis("atk:" + userid);
 		userRedisDao.deleteFromRedis("rtk:" + userid);
 		userRedisDao.deleteFromRedis("loginAttempt:" + userid);
 		userRedisDao.deleteFromRedis("rsa:" + userid);
+		userMapper.goodbye(userid, password);
+		securityMapper.deleteSalt(userid);
 	}
 
 	public boolean isValidPassword(String password) {
