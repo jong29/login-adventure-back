@@ -40,7 +40,7 @@
         where userid = #{userid}
     </select>
 
-	<update id="userModify" parameterType="com.ssafy.la.user.model.dto.UserVo">
+	<update id="modify" parameterType="String">
 		update users
 		set password=#{password}
 		where userid=#{userid}

@@ -42,7 +42,7 @@ public class UserViewModify {
 			throw new MyException();
 		}
 		user.setPassword(newPw);
-		userMapper.modify(user);
+		userMapper.modify(userid, newPw);
 	}
 
 	public UserInfoResponseDto userinfo(String userid) {

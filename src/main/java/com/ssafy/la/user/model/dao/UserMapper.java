@@ -16,7 +16,7 @@ public interface UserMapper {
 	
 	void goodbye(@Param("userid")String userid, @Param("password") String password);
 	
-	void modify(UserVo userVo);
+	void modify(@Param("userid")String userid, @Param("password") String password);
 	
 	String checkId(String userId);
 

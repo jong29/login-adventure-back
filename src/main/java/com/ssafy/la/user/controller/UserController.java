@@ -72,7 +72,6 @@ public class UserController {
 
 	@GetMapping("/height")
 	public ResponseEntity<CommonResponse> height() {
-		System.out.println("hello");
 		String uuid = UUID.randomUUID().toString();    // uuid 생성
 		KeyPair keyPair = rsa_2048.createKey();    // key 생성
 
@@ -131,6 +130,7 @@ public class UserController {
 	public ResponseEntity<CommonResponse> modify(@RequestBody UserModifyDto userModifyDto) {
 		String uuid = userModifyDto.getUuid();
 		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
+
 		if (privateKey == null) {
 			throw new MyException();
 		}
