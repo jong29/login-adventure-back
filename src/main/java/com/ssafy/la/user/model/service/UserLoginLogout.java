@@ -3,6 +3,7 @@ package com.ssafy.la.user.model.service;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,12 +75,14 @@ public class UserLoginLogout {
 		}
 		
 		//create and return jwt
-		String atk = jwtProvider.createAccessToken(user, atkExp, salt);
-		String rtk = jwtProvider.createRefreshToken(userid, rtkExp, salt);
+		String jwtSalt = UUID.randomUUID().toString();
+		String atk = jwtProvider.createAccessToken(user, atkExp, jwtSalt);
+		String rtk = jwtProvider.createRefreshToken(userid, rtkExp, jwtSalt);
 		
 		// put jwt in redis
 		userRedisDao.saveToRedis("atk:" + userid, atk, Duration.ofMillis(atkExp));
 		userRedisDao.saveToRedis("rtk:" + userid, rtk, Duration.ofMillis(rtkExp));
+		userRedisDao.saveToRedis("salt:" + userid, jwtSalt, Duration.ofMillis(rtkExp));
 		
 		Map<String, Object> res = new HashMap<>();
 		res.put("userid", userid);
@@ -94,11 +97,14 @@ public class UserLoginLogout {
 	}
 	
 	public Map<String, Object> reissue(String userid) {
-		String salt = securityMapper.readSalt(userid);
 		UserVo user = userMapper.userinfo(userid);
-		
+		if (user == null) {
+			throw new MyException();
+		}
+		String jwtSalt = userRedisDao.readFromRedis("salt:" + userid);
+
 		//create and return jwt
-		String atk = jwtProvider.createAccessToken(user, atkExp, salt);
+		String atk = jwtProvider.createAccessToken(user, atkExp, jwtSalt);
 		
 		// put jwt in redis
 		userRedisDao.saveToRedis("atk:" + userid, atk, Duration.ofMillis(atkExp));

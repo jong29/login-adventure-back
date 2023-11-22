@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ssafy.la.util.exception.exceptions.AtkTimeoutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -73,7 +74,7 @@ public class GlobalInterceptor implements HandlerInterceptor{
 								throw new MyException(); // 로그아웃
 							}
 							if (rtk.equals(token)) {
-								salt = securityMapper.readSalt(userid); // salt값 가져와서 한 번 더 토큰 검증
+								salt = userRedisDao.readFromRedis("salt:"+userid); // salt값 가져와서 한 번 더 토큰 검증
 								if (!jwtProvider.validateToken(rtk, salt)) { // 토큰 변조
 									throw new MyException();
 								}
@@ -91,17 +92,15 @@ public class GlobalInterceptor implements HandlerInterceptor{
 							System.out.println(userid);
 							if (token == null) {
 								System.out.println("토큰 문제");
-								throw new MyException();
+								throw new AtkTimeoutException();
 							}
-							System.out.println("어디서 에러나는거야?");
 							if (atk.equals(token)) {
-								salt = securityMapper.readSalt(userid);
+								salt = userRedisDao.readFromRedis("salt:" + userid);
 								if (!jwtProvider.validateToken(atk, salt)) { // atk 만료된 상황 -> rtk 들고 오라고 응답
 									System.out.println("소금 문제");
 									throw new MyException();
 								}
 							}
-							System.out.println("여기야?");
 						}
 					}
 				}
