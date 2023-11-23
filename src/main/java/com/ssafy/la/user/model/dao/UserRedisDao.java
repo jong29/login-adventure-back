@@ -42,11 +42,12 @@ public class UserRedisDao {
     }
 
     public long incrementRequest(String key) {
-        Long requests = redisTemplate.opsForValue().increment("req:"+key);
+        Long requests = redisTemplate.opsForValue().increment("ip:"+key);
         if (requests.equals(1L)) {
-            redisTemplate.expire("req:"+key, 300L, TimeUnit.SECONDS);
+            redisTemplate.expire("ip:"+key, 300L, TimeUnit.SECONDS);
         }
         return requests;
     }
+    
     
 }

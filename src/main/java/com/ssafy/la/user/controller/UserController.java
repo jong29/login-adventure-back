@@ -109,19 +109,21 @@ public class UserController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<CommonResponse> signup(@RequestBody UserSignupDto userSignupDto) {
-		String uuid = userSignupDto.getUuid();
-		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
-		if (privateKey == null) {
-			throw new MyException();
-		}
+//		String uuid = userSignupDto.getUuid();
+//		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
+//		if (privateKey == null) {
+//			throw new MyException();
+//		}
 		/**
 		 * 복호화
 		 */
-		userSignupDto.setPassword(rsa_2048.decrypt(userSignupDto.getPassword(), privateKey));
-		userSignupDto.setEmail(rsa_2048.decrypt(userSignupDto.getEmail(), privateKey));
-		userSignupDto.setUsername(rsa_2048.decrypt(userSignupDto.getUsername(), privateKey));
+//		userSignupDto.setPassword(rsa_2048.decrypt(userSignupDto.getPassword(), privateKey));
+//		userSignupDto.setEmail(rsa_2048.decrypt(userSignupDto.getEmail(), privateKey));
+//		userSignupDto.setUsername(rsa_2048.decrypt(userSignupDto.getUsername(), privateKey));
 
+		System.out.println("userSignupController start >>");
 		userSignupGoodbye.signup(userSignupDto);
+		System.out.println("userSignupController finish <<");
 
 		return SuccessResponse.toResponseEntity(201, "회원가입 성공", null);
 	}

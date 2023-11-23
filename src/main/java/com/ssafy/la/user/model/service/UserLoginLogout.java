@@ -43,15 +43,15 @@ public class UserLoginLogout {
 
 	public Map<String, Object> login(LoginRequestDto loginRequestDto) {
 		// get uuid
-		String uuid = loginRequestDto.getUuid();
+//		String uuid = loginRequestDto.getUuid();
 
 		// search for uuid in redis
-		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
+//		String privateKey = userRedisDao.readFromRedis("rsa:" + uuid);
 
 		// if not in redis throw exception
-		if (privateKey == null) {
-			throw new KeyTimeoutException();
-		}
+//		if (privateKey == null) {
+//			throw new KeyTimeoutException();
+//		}
 
 		String userid = loginRequestDto.getUserid();
 		
@@ -61,7 +61,7 @@ public class UserLoginLogout {
 //		}
 		
 		// decrypt password
-		String password = rsa.decrypt(loginRequestDto.getPassword(), privateKey);
+		String password = loginRequestDto.getPassword();
 
 		loginRequestDto.setUserid(userid);
 		loginRequestDto.setPassword(password);
@@ -91,8 +91,8 @@ public class UserLoginLogout {
 	}
 	
 	public void logout(String userid) {
-		userRedisDao.deleteFromRedis("atk:"+userid);
-		userRedisDao.deleteFromRedis("rtk:"+userid);
+//		userRedisDao.deleteFromRedis("atk:"+userid);
+//		userRedisDao.deleteFromRedis("rtk:"+userid);
 	}
 	
 	public Map<String, Object> reissue(String userid) {

@@ -38,6 +38,7 @@ public class UserSignupGoodbye {
 
 	@Transactional(rollbackFor = Exception.class)
 	public void signup(UserSignupDto userRegisterDto) {
+		System.out.println("signupService");
 		UserVo user = new UserVo();
 		user.setUserid(userRegisterDto.getUserid());
 		user.setUsername(userRegisterDto.getUsername());
@@ -45,22 +46,22 @@ public class UserSignupGoodbye {
 		user.setEmail(userRegisterDto.getEmail());
 
 		String pw = userRegisterDto.getPassword();
-		if (!isValidPassword(pw)) {
-			throw new MyException();
-		}
+//		if (!isValidPassword(pw)) {
+//			throw new MyException();
+//		}
 		
 		String email = userRegisterDto.getEmail();
-		if (!isValidEmail(email)) {
-			throw new MyException();
-		}
+//		if (!isValidEmail(email)) {
+//			throw new MyException();
+//		}
 		
 //		mailService.sendVerficiationEmail(user);
 
 		String salt = sha_256.getSalt();
 		user.setPassword(sha_256.SHA256(pw, salt));
-		System.out.println("user 비밀번호:" + user.getPassword());
+//		System.out.println("user 비밀번호:" + user.getPassword());
 
-		System.out.println(user);
+//		System.out.println(user);
 		userMapper.signup(user); // 회원 저장
 		securityMapper.insertSecurity(user.getUserid(), salt); // salt 저장
 	}
