@@ -82,7 +82,6 @@ public class UserLoginLogout {
 		// put jwt in redis
 		userRedisDao.saveToRedis("atk:" + userid, atk, Duration.ofMillis(atkExp));
 		userRedisDao.saveToRedis("rtk:" + userid, rtk, Duration.ofMillis(rtkExp));
-		userRedisDao.saveToRedis("salt:" + userid, jwtSalt, Duration.ofMillis(rtkExp));
 		
 		Map<String, Object> res = new HashMap<>();
 		res.put("userid", userid);
@@ -101,9 +100,9 @@ public class UserLoginLogout {
 		if (user == null) {
 			throw new MyException();
 		}
-		String jwtSalt = userRedisDao.readFromRedis("salt:" + userid);
 
 		//create and return jwt
+		String jwtSalt = UUID.randomUUID().toString();
 		String atk = jwtProvider.createAccessToken(user, atkExp, jwtSalt);
 		
 		// put jwt in redis
@@ -121,7 +120,4 @@ public class UserLoginLogout {
 		return true;
 	}
 	
-//	public boolean loginLimitCheck(String userid, String ) {
-//	}
-
 }
