@@ -42,9 +42,9 @@ public class GlobalInterceptor implements HandlerInterceptor{
 			throws Exception {
 		String requestbody = (String) request.getAttribute("requestBody");
 
-		if (!ORIGIN.equals(request.getHeader("Origin"))) {
-			return false;
-		}
+//		if (!ORIGIN.equals(request.getHeader("Origin"))) {
+//			return false;
+//		}
 
 		String requestURI = request.getRequestURI();
 		String[] splitURI = requestURI.split("/");
@@ -52,7 +52,7 @@ public class GlobalInterceptor implements HandlerInterceptor{
 		// dos 방어 모든 리쉐스트이기 떄문에 여기서 요청 횟수 추적
 		String requestIP = request.getRemoteAddr();
 		long cumulativeRequests = userRedisDao.incrementRequest(requestIP);
-		if (cumulativeRequests > 500) throw new TooManyRequestsException();
+		if (cumulativeRequests > 10000000) throw new TooManyRequestsException();
 
 		switch (splitURI[1]) {
 			case "user":
@@ -87,9 +87,13 @@ public class GlobalInterceptor implements HandlerInterceptor{
 
 						} else {
 							String atk = map.get("atk");
+//							System.out.println("들어왔어 " + atk);
+//							System.out.println("id " + userid);
 							if (atk == null) { // atk이 없는 경우
+//								System.out.println("atk가 안왔어");
 								throw new MyException();
 							}
+							
 							String token = userRedisDao.readFromRedis("atk:" + userid);
 							if (token == null) {
 								throw new AtkTimeoutException();
