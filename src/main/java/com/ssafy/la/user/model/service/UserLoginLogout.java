@@ -59,9 +59,9 @@ public class UserLoginLogout {
 		if (!loginLimitCheck(userid)) {
 			throw new MyException();
 		}
-		
+
 		// decrypt password
-		String password = loginRequestDto.getPassword();
+		String password = rsa.decrypt(loginRequestDto.getPassword(), privateKey);
 
 		loginRequestDto.setUserid(userid);
 		loginRequestDto.setPassword(password);

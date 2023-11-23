@@ -70,7 +70,7 @@ public class UserSignupGoodbye {
 		}
 
         // 일단 보류
-//		mailService.sendVerficiationEmail(user);
+		mailService.sendVerficiationEmail(user);
 
         String salt = sha_256.getSalt();
         user.setPassword(sha_256.SHA256(pw, salt));
