@@ -42,9 +42,9 @@ public class GlobalInterceptor implements HandlerInterceptor{
 			throws Exception {
 		String requestbody = (String) request.getAttribute("requestBody");
 
-//		if (!ORIGIN.equals(request.getHeader("Origin"))) {
-//			return false;
-//		}
+		if (!ORIGIN.equals(request.getHeader("Origin"))) {
+			return false;
+		}
 
 		String requestURI = request.getRequestURI();
 		String[] splitURI = requestURI.split("/");
@@ -77,20 +77,10 @@ public class GlobalInterceptor implements HandlerInterceptor{
 							if (token == null) {
 								throw new MyException(); // 로그아웃
 							}
-							// 토큰 매칭되고, 레디스에서 만료 확인하면  validation 작업 필요 x
-//							if (rtk.equals(token)) {
-//								salt = userRedisDao.readFromRedis("salt:"+userid); // salt값 가져와서 한 번 더 토큰 검증
-//								if (!jwtProvider.validateToken(rtk, salt)) { // 토큰 변조
-//									throw new MyException();
-//								}
-//							}
 
 						} else {
 							String atk = map.get("atk");
-//							System.out.println("들어왔어 " + atk);
-//							System.out.println("id " + userid);
 							if (atk == null) { // atk이 없는 경우
-//								System.out.println("atk가 안왔어");
 								throw new MyException();
 							}
 							
@@ -98,13 +88,6 @@ public class GlobalInterceptor implements HandlerInterceptor{
 							if (token == null) {
 								throw new AtkTimeoutException();
 							}
-							// 토큰 매칭되고, 레디스에서 만료 확인하면  validation 작업 필요 x
-//							if (atk.equals(token)) {
-//								salt = userRedisDao.readFromRedis("salt:" + userid);
-//								if (!jwtProvider.validateToken(atk, salt)) { // atk 만료된 상황 -> rtk 들고 오라고 응답
-//									throw new MyException();
-//								}
-//							}
 						}
 					}
 				}
