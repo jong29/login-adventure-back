@@ -60,7 +60,8 @@ public class UserController {
 	public ResponseEntity<CommonResponse> checkId(@RequestBody Map<String, String> body) {
 		String userId = body.get("userid");
 		Map<String, Object> data = userCheckId.checkId(userId);
-		return SuccessResponse.toResponseEntity(200, "사용가능한 아이디입니다.", data);
+		return SuccessResponse.toResponseEntity(200, "사용가능한 아이디입니다" +
+				".", data);
 	}
 
 	@PostMapping("/checkEmail")

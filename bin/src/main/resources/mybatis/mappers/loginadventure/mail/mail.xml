@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.la.mail.model.dao.MailMapper">
+
+    <select id="verifyToken" parameterType="String" resultType="String">
+        select email
+        from mail
+        where verifytoken = #{verifytoken}
+    </select>
+
+    <insert id="insertToken" parameterType="com.ssafy.la.mail.model.dto.MailTokenVo">
+        insert into mail(email, verifytoken)
+        values(#{email}, #{verifytoken})
+    </insert>
+
+    <delete id="deleteToken" parameterType="String">
+        delete from mail
+        where verifytoken = #{verifytoken}
+    </delete>
+</mapper>

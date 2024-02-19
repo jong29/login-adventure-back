@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.la.user.model.dao.UserMapper">
+
+	<select id="checkId" parameterType="String" resultType="String">
+		select username
+		from users
+		where userid = #{userid}
+	</select>
+
+    <select id="checkEmail" parameterType="String" resultType="String">
+        select username
+        from users
+        where email = #{email}
+    </select>
+
+    <select id="login" parameterType="String" resultType="com.ssafy.la.user.model.dto.UserVo">
+        select * 
+        from users 
+        where userid = #{userid} and
+        password = #{password}
+    </select>
+
+    <insert id="signup" parameterType="com.ssafy.la.user.model.dto.UserVo">
+        insert into users(userid, password, email, username, role)
+        values(#{userid}, #{password}, #{email}, #{username}, #{role})
+    </insert>
+    
+    <delete id="goodbye" parameterType="String">
+    	delete from users
+    	where userid = #{userid}
+    </delete>
+    
+    
+    <select id="userinfo" parameterType="String" resultType="com.ssafy.la.user.model.dto.UserVo">
+        select * 
+        from users 
+        where userid = #{userid}
+    </select>
+
+	<update id="modify" parameterType="String">
+		update users
+		set password=#{password}
+		where userid=#{userid}
+	</update>
+
+    <update id="verifyUser" parameterType="String">
+        update users
+        set role="verified"
+        where email = #{email}
+    </update>
+
+</mapper>
