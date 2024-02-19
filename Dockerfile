@@ -1,17 +1,15 @@
-# Use an official Maven image as the base image
-FROM maven:3.8.4-openjdk-11-slim AS build
-# Set the working directory in the container
-WORKDIR /app
-# Copy the pom.xml and the project files to the container
-COPY pom.xml .
-COPY src ./src
-# Build the application using Maven
-RUN mvn clean package -DskipTests
-# Use an official OpenJDK image as the base image
-FROM openjdk:8-jdk
-# Set the working directory in the container
-WORKDIR /app
-# Copy the built JAR file from the previous stage to the container
-COPY - from=build /app/target/my-application.jar .
-# Set the command to run the application
-CMD ["java", "-jar", "my-application.jar"]
+# Maven
+
+FROM openjdk:11-jdk
+
+# Jar 파일의 위치
+ARG JAR_FILE=target/*.jar
+
+# app.jar는 경우에 따라 이름 변경
+COPY ${JAR_FILE} app.jar
+
+# 생략 가능 - 해당 컨테이너는 8080 port 를 사용한다는 의미.
+EXPOSE 8080
+
+# docker run 시 실행할 필수 명령어
+ENTRYPOINT ["java", "-jar", "/app.jar"]g
