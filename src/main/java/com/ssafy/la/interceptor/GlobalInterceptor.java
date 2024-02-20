@@ -42,9 +42,9 @@ public class GlobalInterceptor implements HandlerInterceptor{
 			throws Exception {
 		String requestbody = (String) request.getAttribute("requestBody");
 
-		if (!ORIGIN.equals(request.getHeader("Origin"))) {
-			return false;
-		}
+//		if (!ORIGIN.equals(request.getHeader("Origin"))) {
+//			return false;
+//		}
 
 		String requestURI = request.getRequestURI();
 		String[] splitURI = requestURI.split("/");
